@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "cropperjs": "^1.6.2",
+    "pica": "^9.0.1"
+  }
+}
