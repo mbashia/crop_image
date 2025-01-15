@@ -44,4 +44,22 @@ defmodule CropImageWeb.PostLive.Index do
 
     {:noreply, stream_delete(socket, :posts, post)}
   end
+
+  def handle_event("upload_cropped_image", %{"cropped_image" => base64}, socket) do
+    [_, base64_data] = String.split(base64, ",")
+    binary_data = Base.decode64!(base64_data)
+    IO.inspect(binary_data)
+
+    case File.exists?("uploads/images") do
+      true ->
+        :ok
+
+      false ->
+        File.mkdir_p!("uploads/images")
+    end
+
+    File.write!("uploads/images/test-image", binary_data) |> IO.inspect(label: "Image savings")
+
+    {:noreply, socket}
+  end
 end

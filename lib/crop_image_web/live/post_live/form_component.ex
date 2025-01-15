@@ -19,14 +19,24 @@ defmodule CropImageWeb.PostLive.FormComponent do
         phx-change="validate"
         phx-submit="save"
       >
-        <img src="" id="output" />
-        <input type="file" id="imageInput" />
-       
+        <.live_file_input upload={@uploads.avatar} />
+        <div id="crop-div" phx-hook="Cropper" class="">
+          <%= for entry <- @uploads.avatar.entries do %>
+            <div class="w-[184px] h-[45px]">
+              <.live_img_preview
+                entry={entry}
+                id="image-to-crop"
+                class="w-full h-full object-cover"
+                style="max-width: 100%;"
+              />
+            </div>
+          <% end %>
+        </div>
+
         <:actions>
-          <.button phx-disable-with="Saving...">Save Post</.button>
+          <.button id="crop-button" phx-disable-with="Saving...">Save Post</.button>
         </:actions>
       </.simple_form>
-      
     </div>
     """
   end
@@ -49,18 +59,22 @@ defmodule CropImageWeb.PostLive.FormComponent do
   #   {:noreply, assign(socket, form: to_form(changeset, action: :validate))}
   # end
 
-  def handle_event("validate", params, socket)do
-    IO.inspect params
-    {:noreply,socket}
-
+  def handle_event("validate", params, socket) do
+    IO.inspect(params)
+    {:noreply, socket}
   end
 
-  def handle_event("save", params, socket)do
-    IO.inspect params
-    {:noreply,socket}
-
+  def handle_event("save", params, socket) do
+    IO.inspect(params)
+    {:noreply, socket}
   end
 
+  def handle_event("upload_cropped_image", %{"cropped_image" => base64}, socket) do
+    [_, base64_data] = String.split(base64, ",")
+    binary_data = Base.decode64!(base64_data)
+    IO.inspect(binary_data)
+    {:noreply, socket}
+  end
 
   # def handle_event("save", %{"post" => post_params}, socket) do
   #   save_post(socket, socket.assigns.action, post_params)
