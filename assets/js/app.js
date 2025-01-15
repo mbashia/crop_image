@@ -79,6 +79,11 @@ Hooks.Cropper = {
                 console.error("Failed to convert cropped canvas to Blob.");
                 return;
               }
+
+
+            // Get file extension from MIME type
+            const extension = blob.type.split("/")[1]; // E.g., "image/jpeg" -> "jpeg"
+
   
               blobToBase64(blob)
                 .then((base64) => {
@@ -86,6 +91,8 @@ Hooks.Cropper = {
                   // Push the cropped image to the server or LiveView
                   this.pushEvent("upload_cropped_image", {
                     cropped_image: base64,
+                    extension: extension,
+
                   });
                 })
                 .catch((error) => {
